@@ -7,8 +7,10 @@ une seule logique de recherche, deux portes d'entrée.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
+import time
 from functools import lru_cache
 
 import numpy as np
@@ -20,6 +22,7 @@ from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
 load_dotenv()
+log = logging.getLogger("rag-core")
 
 FTS_CONFIG = {"fr": "french", "de": "german", "en": "english"}
 
@@ -68,14 +71,27 @@ def get_llm() -> OpenAI:
 # Recherche
 # --------------------------------------------------------------------------
 
+EMBED_RETRIES = int(os.environ.get("EMBED_RETRIES", "4"))
+
+
 def embed_query(question: str) -> np.ndarray:
-    result = get_voyage().embed(
-        [question],
-        model=os.environ.get("EMBEDDING_MODEL", "voyage-4"),
-        input_type="query",   # les documents ont été vectorisés avec input_type="document"
-        output_dimension=int(os.environ.get("EMBEDDING_DIM", "1024")),
-    )
-    return np.array(result.embeddings[0], dtype=np.float32)
+    """Vectorise la question, avec nouvelles tentatives si l'API limite le débit (HTTP 429)."""
+    for attempt in range(1, EMBED_RETRIES + 1):
+        try:
+            result = get_voyage().embed(
+                [question],
+                model=os.environ.get("EMBEDDING_MODEL", "voyage-4"),
+                input_type="query",   # les documents ont été vectorisés avec input_type="document"
+                output_dimension=int(os.environ.get("EMBEDDING_DIM", "1024")),
+            )
+            return np.array(result.embeddings[0], dtype=np.float32)
+        except voyageai.error.RateLimitError:
+            if attempt == EMBED_RETRIES:
+                raise
+            wait = 10 * attempt
+            log.warning("limite de débit Voyage, nouvel essai dans %s s (%s/%s)", wait, attempt, EMBED_RETRIES)
+            time.sleep(wait)
+    raise RuntimeError("inaccessible")
 
 
 # Format des codes produits, ex. "PX-NOVA". À adapter au catalogue via PRODUCT_CODE_REGEX.

@@ -84,10 +84,11 @@ def main() -> None:
         try:
             r = evaluate(item)
         except Exception as exc:
-            r = {"id": item["id"], "question": item["question"], "passed": False,
-                 "checks": {f"erreur {type(exc).__name__}": False}, "retrieved": None, "seconds": 0, "tokens": None}
+            r = {"id": item["id"], "question": item["question"], "passed": False, "error": True,
+                 "checks": {f"erreur technique {type(exc).__name__}: {str(exc)[:120]}": False},
+                 "retrieved": None, "seconds": 0, "tokens": None}
         results.append(r)
-        mark = "OK   " if r["passed"] else "ECHEC"
+        mark = "OK    " if r["passed"] else ("ERREUR" if r.get("error") else "ECHEC ")
         print(f"[{mark}] {r['id']:<28} {r['seconds']:>5.1f} s")
         for name, ok in r["checks"].items():
             if not ok:
@@ -100,7 +101,10 @@ def main() -> None:
     tokens = [r["tokens"]["prompt_tokens"] + r["tokens"]["completion_tokens"] for r in results if r.get("tokens")]
     score = passed / len(results)
 
+    errors = sum(1 for r in results if r.get("error"))
     print(f"\nScore : {passed}/{len(results)} ({score:.0%})")
+    if errors:
+        print(f"Dont {errors} erreur(s) technique(s) (API indisponible, limite de débit...) : à relancer")
     if retrieval:
         print(f"Retrieval (bon extrait dans les sources) : {sum(retrieval)}/{len(retrieval)}")
     print(f"Temps moyen : {sum(r['seconds'] for r in results) / len(results):.1f} s par question")
