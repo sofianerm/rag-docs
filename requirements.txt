@@ -1,5 +1,11 @@
-# Tout le projet : API + import des documents (Docling).
-# Sous Windows/Linux sans GPU, installer d'abord PyTorch CPU :
-#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
--r requirements-api.txt
-docling>=2.30
+# Dépendances de l'API et du serveur MCP (installées par Vercel et par l'image Docker)
+fastapi>=0.115
+uvicorn[standard]>=0.30
+mcp>=2.3,<3
+voyageai>=0.3
+openai>=1.40
+psycopg[binary]>=3.2
+psycopg-pool>=3.2
+pgvector>=0.3
+numpy>=1.26
+python-dotenv>=1.0

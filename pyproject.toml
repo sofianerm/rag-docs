@@ -1,0 +1,12 @@
+[project]
+name = "rag-docs"
+version = "0.2.0"
+description = "Assistant RAG sur documentation technique : Docling, recherche hybride PostgreSQL/pgvector, API FastAPI et serveur MCP"
+requires-python = ">=3.12"
+
+[tool.vercel]
+entrypoint = "api:app"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

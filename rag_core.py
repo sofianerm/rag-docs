@@ -51,7 +51,10 @@ def get_pool() -> ConnectionPool:
         os.environ["DATABASE_URL"],
         min_size=1,
         max_size=5,
-        kwargs={"autocommit": True, "row_factory": dict_row},
+        # prepare_threshold=None : pas de requêtes préparées côté serveur, ce qui rend le pool
+        # compatible avec un pooler en mode transaction (ex. Supabase port 6543, recommandé
+        # en serverless où chaque instance ouvre ses propres connexions).
+        kwargs={"autocommit": True, "row_factory": dict_row, "prepare_threshold": None},
         configure=register_vector,
         open=True,
     )

@@ -1,0 +1,5 @@
+# Import des documents (Docling), à installer en local uniquement.
+# Sans GPU, installer d'abord PyTorch CPU :
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+-r requirements.txt
+docling>=2.30

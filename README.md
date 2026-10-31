@@ -60,7 +60,7 @@ flowchart LR
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows : .venv\Scripts\activate
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu   # sans GPU
-pip install -r requirements.txt
+pip install -r requirements-ingest.txt                 # API + Docling pour l'import
 cp .env.example .env                                   # puis renseigner les clés
 
 docker compose up -d                                   # Postgres + pgvector local, schéma appliqué
@@ -125,14 +125,20 @@ GitHub Actions lance ces tests à chaque push (service `pgvector/pgvector`) et v
 
 ## Déploiement
 
-`render.yaml` décrit le service (image Docker légère, sans Docling : l'import se fait en batch, hors du serveur). Les secrets sont saisis dans Render et ne transitent jamais par Git.
+L'API est déployée sur **Vercel** (FastAPI en fonction serverless, déploiement automatique à chaque push). Seules les dépendances de l'API (`requirements.txt`) sont installées ; Docling reste en local, l'import se faisant en batch, hors du serveur.
+
+En serverless, chaque instance ouvre ses propres connexions : `DATABASE_URL` pointe vers le pooler Supabase en **mode transaction** (port 6543), et les requêtes préparées sont désactivées pour rester compatibles.
+
+Variables d'environnement à définir dans Vercel : `DATABASE_URL`, `VOYAGE_API_KEY`, `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL`, `EMBEDDING_MODEL`, `EMBEDDING_DIM`, `PRODUCT_CODE_REGEX`.
+
+Le `Dockerfile` (image légère, utilisateur non root) permet le même déploiement sur un serveur classique ou un service de conteneurs (Azure Container Apps, Cloud Run…).
 
 ## Structure
 
 ```
 ingest.py          import : extraction, découpage, contexte, embeddings, stockage
 rag_core.py        recherche hybride et génération (partagé par l'API, le MCP et ask.py)
-api.py             API FastAPI + serveur MCP
+api.py             API FastAPI + serveur MCP (point d'entrée Vercel)
 ask.py             client en ligne de commande
 create_token.py    gestion des jetons d'accès
 eval.py            évaluation sur jeu de questions de référence
