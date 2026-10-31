@@ -1,0 +1,10 @@
+.env
+.venv
+docs
+*.pdf
+*.bat
+*.log
+eval
+tests
+.github
+__pycache__

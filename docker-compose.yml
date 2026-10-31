@@ -1,0 +1,18 @@
+# Base Postgres + pgvector pour le développement local.
+# Démarrage : docker compose up -d
+# Le schéma de sql/ est appliqué automatiquement au premier démarrage.
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: rag
+      POSTGRES_DB: rag
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  pgdata:

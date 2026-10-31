@@ -1,0 +1,5 @@
+# Tout le projet : API + import des documents (Docling).
+# Sous Windows/Linux sans GPU, installer d'abord PyTorch CPU :
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+-r requirements-api.txt
+docling>=2.30

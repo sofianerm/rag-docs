@@ -1,0 +1,27 @@
+# Déploiement Render (Blueprint) : New > Blueprint, puis sélectionner ce dépôt.
+# Les secrets (sync: false) sont demandés à la création et ne sont jamais stockés dans Git.
+services:
+  - type: web
+    name: rag-docs-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: VOYAGE_API_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.deepseek.com
+      - key: LLM_MODEL
+        value: deepseek-chat
+      - key: EMBEDDING_MODEL
+        value: voyage-4
+      - key: EMBEDDING_DIM
+        value: "1024"
+      - key: PRODUCT_CODE_REGEX
+        sync: false

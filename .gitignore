@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Documents sources et fichiers dérivés (contenu propriétaire)
+docs/
+*.pdf
+dryrun_output.txt
+import_log.txt
+*.log
+
+# Jeu de questions réel et résultats d'évaluation
+eval/questions.json
+eval/results/
+
+# Lanceurs Windows personnels
+*.bat
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Windows
+Thumbs.db
+desktop.ini

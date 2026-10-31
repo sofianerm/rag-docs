@@ -1,0 +1,43 @@
+[
+  {
+    "id": "puissance-norme",
+    "question": "Quelle est la puissance frigorifique normée du plafond PX-NOVA en plaque acier ?",
+    "expected": "85 W/m² selon DIN 4715",
+    "must_contain": ["85"],
+    "source": {"filename": "Fiche PX-NOVA fr.pdf", "page": 8}
+  },
+  {
+    "id": "tableau-horizontal",
+    "question": "Quel facteur de correction d'occupation appliquer pour un taux d'occupation de 70 % sur le PX-NOVA ?",
+    "expected": "KB = 1,103",
+    "must_contain": ["1[.,]103"],
+    "source": {"filename": "Fiche PX-NOVA fr.pdf", "page": 8},
+    "note": "Teste la lecture d'un tableau horizontal (une ligne de %, une ligne de valeurs)"
+  },
+  {
+    "id": "tableau-vertical",
+    "question": "Quel facteur de correction de ventilation pour une ventilation à déplacement d'air ?",
+    "expected": "KL = 1,02",
+    "must_contain": ["1[.,]02"],
+    "source": {"filename": "Fiche PX-NOVA fr.pdf", "page": 8}
+  },
+  {
+    "id": "reference-exacte",
+    "question": "Pour quels diamètres de raccordement les raccords rapides sont-ils prévus ?",
+    "expected": "8, 10, 12, 15, 18 et 22 mm",
+    "must_contain": ["22"],
+    "source": {"filename": "Fiche PX-NOVA fr.pdf", "page": 6}
+  },
+  {
+    "id": "hors-documentation",
+    "question": "Quel est le prix au m² du plafond PX-NOVA ?",
+    "expected": "Le système doit répondre qu'il ne trouve pas l'information, sans inventer de prix",
+    "expect_no_answer": true
+  },
+  {
+    "id": "comparaison",
+    "question": "Quelles sont les différences entre le PX-NOVA et le PX-LUNA ?",
+    "expected": "Réponse qui s'appuie sur les deux fiches produits",
+    "must_cite": ["Fiche PX-NOVA fr.pdf", "Fiche PX-LUNA fr.pdf"]
+  }
+]
