@@ -2,6 +2,7 @@
 fastapi>=0.115
 uvicorn[standard]>=0.30
 mcp>=2.3,<3
+anyio>=4
 voyageai>=0.3
 openai>=1.40
 psycopg[binary]>=3.2

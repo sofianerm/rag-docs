@@ -3,6 +3,20 @@ name = "rag-docs"
 version = "0.2.0"
 description = "Assistant RAG sur documentation technique : Docling, recherche hybride PostgreSQL/pgvector, API FastAPI et serveur MCP"
 requires-python = ">=3.12"
+# Dépendances de l'API (lues par Vercel). requirements.txt reprend la même liste pour Docker / pip.
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "mcp>=2.3,<3",
+    "anyio>=4",
+    "voyageai>=0.3",
+    "openai>=1.40",
+    "psycopg[binary]>=3.2",
+    "psycopg-pool>=3.2",
+    "pgvector>=0.3",
+    "numpy>=1.26",
+    "python-dotenv>=1.0",
+]
 
 [tool.vercel]
 entrypoint = "api:app"
@@ -10,3 +24,6 @@ entrypoint = "api:app"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.setuptools]
+py-modules = ["api", "rag_core"]
